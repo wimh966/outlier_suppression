@@ -1,0 +1,99 @@
+quant:
+    is_remove_padding: True
+    ln:
+        delay: True
+    a_qconfig:
+        quantizer: LSQPlusFakeQuantize
+        observer: AvgPruneMinMaxObserver
+        bit: 6
+        symmetric: False
+        ch_axis: -1 
+    w_qconfig:
+        quantizer: FixedFakeQuantize
+        observer: MinMaxObserver
+        bit: 6
+        symmetric: True
+        ch_axis: 0 
+    calibrate: 256
+data:
+    lang: null
+    dataset_name: xsum
+    task: summarization_xsum
+    dataset_config_name: null # The configuration name of the dataset to use (via the datasets library).
+    text_column: null # The name of the column in the datasets containing the full texts (for summarization).
+    summary_column: null # The name of the column in the datasets containing the summaries (for summarization).
+    train_file: null # The input training data file (a jsonlines or csv file).
+    validation_file: null # An optional input evaluation data file to evaluate the metrics (rouge) on (a jsonlines or csv file).
+    test_file: null # An optional input test data file to evaluate the metrics (rouge) on " "(a jsonlines or csv file).
+    overwrite_cache: False # Overwrite the cached training and evaluation sets
+    preprocessing_num_workers: null # The number of processes to use for the preprocessing.
+    max_source_length: 1024 # The maximum total input sequence length after tokenization. Sequences longer than this will be truncated, sequences shorter will be padded.
+    max_target_length: 64  # The maximum total sequence length for target text after tokenization. Sequences longer than this will be truncated, sequences shorter will be padded.
+    val_max_target_length: 62
+    pad_to_max_length: True
+    max_train_samples: null
+    max_eval_samples: null
+    max_predict_samples: null
+    num_beams: 6
+    ignore_pad_token_for_loss: True
+    source_prefix: null # A prefix to add before every source text (useful for T5 models).
+    forced_bos_token: null
+    cache_dir: null
+
+model:
+    model_name_or_path: /mnt/lustressd/share/zhangyunchen/summ/bart-base-xsum
+    config_name: null # pretrained config name or path if not the same as model_name
+    tokenizer_name: null
+    cache_dir: null #Where do you want to store the pretrained models downloaded from huggingface.co
+    use_fast_tokenizer: True # whether to use one of the fast tokenizer (backed by the tokenizers library) or not
+    model_revision: main # The specific model version to use (can be a branch name, tag name or commit id).
+    use_auth_token: False # will use the token generated when running `transformers-cli login` (necessary to use this script "
+            # with private models)"
+    resize_position_embeddings: True
+
+train:
+    seed: 42
+    output_dir: output_dir
+    overwrite_output_dir: True # use this to continue training if output_dir points to a checkpoint directory
+    do_train: False
+    do_eval: True
+    do_predict: False
+    evaluation_strategy: epoch #The evaluation strategy to use. "no"; "steps"; "epoch"
+    eval_steps: 1 # Run an evaluation every X steps.
+    per_device_train_batch_size: 4 # Batch size per GPU/TPU core/CPU for training.
+    per_device_eval_batch_size: 4 # Batch size per GPU/TPU core/CPU for evaluation
+    gradient_accumulation_steps: 1 # Number of updates steps to accumulate before performing a backward/update pass.
+    generation_max_length: 62
+    eval_accumulation_steps: 1
+    learning_rate: 1.0e-5 # The initial learning rate for AdamW.
+    weight_decay: 0.01 # Weight decay for AdamW if we apply some.
+    max_grad_norm: 1.0 # Max gradient norm.
+    num_train_epochs: 1.0 #Total number of training epochs to perform.
+    max_steps: -1  # If > 0: set total number of training steps to perform. Override num_train_epochs.
+    lr_scheduler_type: linear # The scheduler type to use.
+    warmup_ratio: 0.06 # Linear warmup over warmup_ratio fraction of total steps.
+    warmup_steps: 0 # Linear warmup over warmup_steps.
+    gradient_checkpointing: False  # If True, use gradient checkpointing to save memory at the expense of slower backward pass.
+    label_smoothing_factor: 0.1
+    predict_with_generate: True
+
+progress:
+    log_level: passive # Logger log level to use on the main node. Possible choices are the log levels as strings: 'debug', 'info', 'warning', 'error' and 'critical', plus a 'passive' level which doesn't set anything and lets the application set the level. Defaults to 'passive'.
+    log_level_replica: passive # Logger log level to use on replica nodes.
+    logging_dir: null # Tensorboard log dir.
+    logging_strategy: epoch # The logging strategy to use. "no"; "steps"; "epoch";
+    logging_steps: 1 # Log every X updates steps.
+
+    save_strategy: epoch # The checkpoint save strategy to use. "no"; "steps"; "epoch";
+    save_steps: 1000 # Save checkpoint every X updates steps.
+    save_total_limit: null # Limit the total amount of checkpoints.
+                           # Deletes the older checkpoints in the output_dir. Default is unlimited checkpoints
+    save_on_each_node: False #When doing multi-node distributed training, whether to save models and checkpoints on each node, or only on the main one
+    
+    no_cuda: False # Do not use CUDA even when it is available
+    run_name: null # An optional descriptor for the run. Notably used for wandb logging.
+    disable_tqdm: null # Whether or not to disable the tqdm progress bars. use False or True
+    
+    load_best_model_at_end: False  #Whether or not to load the best model found during training at the end of training.
+    metric_for_best_model: null # The metric to use to compare two different models."
+    greater_is_better: null # Whether the `metric_for_best_model` should be maximized or not.

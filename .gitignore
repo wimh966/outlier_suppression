@@ -1,0 +1,21 @@
+# Build
+*.pyc
+*.egg-info
+__pycache__
+build
+_build
+dist
+
+# Misc
+.env
+*.swp
+
+# Mac
+.DS_Store
+
+# Code Editor
+.idea
+.vscode
+
+# # exp
+# exp
