@@ -80,7 +80,7 @@ Run the following and you can get the result.
 cd exp/xsum/twc_fine_gamma
 bash run.sh
 ```
-## Experiments on QAT
+### Experiments on QAT
 We are still sorting out the code of the part. Looking forward to it!
 
 
